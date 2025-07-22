@@ -1,104 +1,82 @@
 // src/components/Login.jsx
 
-import React, { useState, useContext } from 'react';
-import { useNavigate, Link }          from 'react-router-dom';
-import { AuthContext }                from '../context/authcontext';
-import heroCartoon                    from '../assets/hero-cartoon.png';
+import React, { useRef, useState } from 'react';
+import { Link, useNavigate }          from 'react-router-dom';
+import { useAuth }                    from '../context/authcontext';
 
 export default function Login() {
-  const { login, isLoading, error } = useContext(AuthContext);
-  const [username, setUsername]      = useState('');
-  const [password, setPassword]      = useState('');
-  const [remember, setRemember]      = useState(false);
-  const navigate                     = useNavigate();
+  const emailRef    = useRef();
+  const passwordRef = useRef();
+  const { login }   = useAuth();
+  const [error, setError]     = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate   = useNavigate();
 
-  const handleSubmit = async e => {
+  async function handleSubmit(e) {
     e.preventDefault();
     try {
-      await login(username, password, remember);
+      setError('');
+      setLoading(true);
+      await login(emailRef.current.value, passwordRef.current.value);
       navigate('/');
     } catch {
-      // error surfaced via AuthContext.error
+      setError('Failed to log in');
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   return (
-    <div className="container flex-center vh-100">
-      <div className="card glass-card p-lg" style={{ maxWidth: 900 }}>
-        <div className="flex-center mb-md gap-lg">
-          <img
-            src={heroCartoon}
-            alt="Team Mascot"
-            style={{ maxWidth: '90%', height: 'auto' }}
-          />
-        </div>
+    <div
+      className="vh-100"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <div className="card glass-card p-lg" style={{ maxWidth: '400px', width: '100%' }}>
+        <h2 className="title">Log In</h2>
+        {error && <div className="error">{error}</div>}
 
-        <h1 className="section-title">Welcome back!</h1>
-        <p className="text-center mb-md">
-          Sign in to make your picks and climb the leaderboard.
-        </p>
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-md">
-            <label htmlFor="username">Username</label>
+        <form onSubmit={handleSubmit} className="form gap-lg">
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">Email</label>
             <input
-              id="username"
-              type="text"
-              className="text-input"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
+              id="email"
+              type="email"
+              ref={emailRef}
+              className="form-input"
               required
             />
           </div>
 
-          <div className="mb-md">
-            <label htmlFor="password">Password</label>
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">Password</label>
             <input
               id="password"
               type="password"
-              className="text-input"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
+              ref={passwordRef}
+              className="form-input"
               required
             />
           </div>
-
-          <div
-            className="flex-center mb-md"
-            style={{ justifyContent: 'space-between', width: '100%' }}
-          >
-            <label className="remember">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={e => setRemember(e.target.checked)}
-              />{' '}
-              Remember me
-            </label>
-            <Link to="/forgot-password" className="btn-outline">
-              Forgot password?
-            </Link>
-          </div>
-
-          {error && (
-            <p className="error-message mb-md">{error}</p>
-          )}
 
           <button
             type="submit"
             className="button"
-            disabled={isLoading}
+            disabled={loading}
           >
-            {isLoading ? 'Logging in…' : 'Log In'}
+            Log In
           </button>
         </form>
 
-        <p className="text-center mt-md">
-          Don’t have an account?{' '}
-          <Link to="/signup" className="btn-outline">
-            Sign up
-          </Link>
-        </p>
+        <div className="footer-text" style={{ marginTop: '1rem' }}>
+          <Link to="/forgot-password">Forgot Password?</Link>
+        </div>
+        <div className="footer-text" style={{ marginTop: '0.5rem' }}>
+          Need an account? <Link to="/signup">Sign Up</Link>
+        </div>
       </div>
     </div>
   );
