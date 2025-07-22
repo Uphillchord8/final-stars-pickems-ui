@@ -12,29 +12,19 @@ export default function Login() {
   const [remember, setRemember]     = useState(false);
   const navigate                    = useNavigate();
 
+  // Single handleSubmit definition, with a debug log
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log('🔥 handleSubmit:', { username, password, remember });
     try {
       await login(username, password, remember);
-      navigate('/');
-    } catch {
-      // error surfaced via AuthContext.error
+      console.log('✅ login succeeded');
+      navigate('/leaderboard');   // send them somewhere you actually have routed
+    } catch (err) {
+      console.error('❌ login error:', err);
+      // AuthContext.error will display via your existing error-message block
     }
   };
-
-async function handleSubmit(e) {
-  e.preventDefault();
-  console.log('🔥 handleSubmit:', { username, password, remember });
-  try {
-    await login(username, password, remember);
-    console.log('✅ login succeeded');
-    navigate('/leaderboard');   // see note below
-  } catch (err) {
-    console.error('❌ login error:', err);
-    // error from context will show in UI
-  }
-}
-
 
   return (
     <div className="container flex-center vh-100">
@@ -100,7 +90,7 @@ async function handleSubmit(e) {
 
           <button
             type="submit"
-            className="button"
+            className="button login-button"
             disabled={isLoading}
           >
             {isLoading ? 'Logging in…' : 'Log In'}
