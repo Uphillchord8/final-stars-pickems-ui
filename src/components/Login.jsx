@@ -22,6 +22,20 @@ export default function Login() {
     }
   };
 
+async function handleSubmit(e) {
+  e.preventDefault();
+  console.log('🔥 handleSubmit:', { username, password, remember });
+  try {
+    await login(username, password, remember);
+    console.log('✅ login succeeded');
+    navigate('/leaderboard');   // see note below
+  } catch (err) {
+    console.error('❌ login error:', err);
+    // error from context will show in UI
+  }
+}
+
+
   return (
     <div className="container flex-center vh-100">
       <div className="card glass-card p-lg login-card">
