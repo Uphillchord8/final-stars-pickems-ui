@@ -1,82 +1,104 @@
 // src/components/Login.jsx
 
-import React, { useRef, useState } from 'react';
-import { Link, useNavigate }          from 'react-router-dom';
-import { useAuth }                    from '../context/authcontext';
+import React, { useState, useContext } from 'react';
+import { useNavigate, Link }          from 'react-router-dom';
+import { AuthContext }                from '../context/authcontext';
+import heroCartoon                    from '../assets/hero-cartoon.png';
 
 export default function Login() {
-  const emailRef    = useRef();
-  const passwordRef = useRef();
-  const { login }   = useAuth();
-  const [error, setError]     = useState('');
-  const [loading, setLoading] = useState(false);
-  const navigate   = useNavigate();
+  const { login, isLoading, error } = useContext(AuthContext);
+  const [username, setUsername]     = useState('');
+  const [password, setPassword]     = useState('');
+  const [remember, setRemember]     = useState(false);
+  const navigate                    = useNavigate();
 
-  async function handleSubmit(e) {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
-      setError('');
-      setLoading(true);
-      await login(emailRef.current.value, passwordRef.current.value);
+      await login(username, password, remember);
       navigate('/');
     } catch {
-      setError('Failed to log in');
-    } finally {
-      setLoading(false);
+      // error surfaced via AuthContext.error
     }
-  }
+  };
 
   return (
-    <div
-      className="vh-100"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      <div className="card glass-card p-lg" style={{ maxWidth: '400px', width: '100%' }}>
-        <h2 className="title">Log In</h2>
-        {error && <div className="error">{error}</div>}
+    <div className="container flex-center vh-100">
+      <div className="card glass-card p-lg login-card">
+        <div className="flex-center mb-md gap-lg">
+          <img
+            src={heroCartoon}
+            alt="Team Mascot"
+            className="login-hero"
+          />
+        </div>
 
-        <form onSubmit={handleSubmit} className="form gap-lg">
-          <div className="form-group">
-            <label htmlFor="email" className="form-label">Email</label>
+        <h1 className="section-title login-heading">Welcome back!</h1>
+        <p className="text-center mb-md">
+          Sign in to make your picks and climb the leaderboard.
+        </p>
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-md">
+            <label htmlFor="username">Username</label>
             <input
-              id="email"
-              type="email"
-              ref={emailRef}
-              className="form-input"
+              id="username"
+              type="text"
+              className="text-input"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
               required
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">Password</label>
+          <div className="mb-md">
+            <label htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
-              ref={passwordRef}
-              className="form-input"
+              className="text-input"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
               required
             />
           </div>
+
+          <div
+            className="flex-center mb-md"
+            style={{ justifyContent: 'space-between', width: '100%' }}
+          >
+            <label className="remember">
+              <input
+                type="checkbox"
+                checked={remember}
+                onChange={e => setRemember(e.target.checked)}
+              />{' '}
+              Remember me
+            </label>
+            <Link to="/forgot-password" className="btn-outline">
+              Forgot password?
+            </Link>
+          </div>
+
+          {error && (
+            <p className="error-message mb-md">{error}</p>
+          )}
 
           <button
             type="submit"
             className="button"
-            disabled={loading}
+            disabled={isLoading}
           >
-            Log In
+            {isLoading ? 'Logging in…' : 'Log In'}
           </button>
         </form>
 
-        <div className="footer-text" style={{ marginTop: '1rem' }}>
-          <Link to="/forgot-password">Forgot Password?</Link>
-        </div>
-        <div className="footer-text" style={{ marginTop: '0.5rem' }}>
-          Need an account? <Link to="/signup">Sign Up</Link>
-        </div>
+        <p className="text-center mt-md">
+          Don’t have an account?{' '}
+          <Link to="/signup" className="btn-outline">
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );

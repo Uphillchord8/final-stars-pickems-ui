@@ -639,10 +639,10 @@ select {
 }
 
 /* ──────────────────────────────────────────────────────────
-  17) Login Page Overrides
+  17) Login Page
 ────────────────────────────────────────────────────────── */
 
-.glass-card {
+.login-card {
   background: rgba(255,255,255,0.6);
   backdrop-filter: blur(12px);
   box-shadow: var(--shadow-light);
@@ -663,3 +663,45 @@ select {
 .gap-lg {
   gap: var(--sp-lg);
 }
+
+.login-hero {
+  max-width: 250px;
+  height: auto;
+}
+
+.login-heading {
+  text-align: center;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+  18) Sign-Up Page
+────────────────────────────────────────────────────────── */
+
+/* Signup page tweaks */
+.signup-card {
+  max-width: 500px;
+}
+
+.avatar-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--sp-md);
+}
+
+.avatar-preview {
+  display: inline-block;
+  cursor: pointer;
+  color: var(--star-black);
+  font-weight: 600;
+}
+
+.avatar-preview-img {
+  display: block;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto var(--sp-sm);
+}
+
