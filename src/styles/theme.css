@@ -1,0 +1,665 @@
+/* src/styles/theme.css */
+
+/* ──────────────────────────────────────────────────────────
+   1) Design Tokens
+────────────────────────────────────────────────────────── */
+:root {
+  /* Brand Colors */
+  --star-victory-green:    #00843D;
+  --star-skyline-green:    #00FA00;
+  --star-silver:           #A7A9AC;
+  --star-black:            #111111;
+  --star-white:            #FFFFFF;
+  --star-bg-dark:          #001F1F;
+
+  /* Overlay for background photo */
+  --overlay-victory-green: rgba(0, 132, 61, 0.6);
+
+  /* Typography */
+  --font-sans:  'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --fs-xxl:     3.125rem;  /* ~50px (25% ↑ from 40px) */
+  --fs-xl:      2.1875rem; /* ~35px (25% ↑ from 28px) */
+  --fs-lg:      1.5625rem; /* ~25px (25% ↑ from 20px) */
+  --fs-md:      1rem;      /* ~16px */
+  --fs-sm:      0.875rem;  /* ~14px */
+
+  /* Spacing Scale */
+  --sp-xxl:     32px;
+  --sp-xl:      24px;
+  --sp-md:      16px;
+  --sp-sm:       8px;
+  --sp-xs:       4px;
+
+  /* Radii & Shadows */
+  --radius-sm:    4px;
+  --radius-md:    6px;
+  --shadow-light: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.12);
+
+  /* Transitions */
+  --trans-all: 200ms ease-in-out;
+
+  /* Container Width (30% wider than 1200px) */
+  --container-max: 1560px;
+}
+
+/* ──────────────────────────────────────────────────────────
+   2) Reset & Base Styles
+────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 100%; /* 16px */
+}
+
+body {
+  min-height: 100vh;
+  background:
+    /* green overlay */
+    linear-gradient(
+      to bottom right,
+      var(--overlay-victory-green),
+      var(--overlay-victory-green)
+    ),
+    /* fan photo */
+    url('../assets/aac-fans.jpg') center/cover no-repeat fixed;
+  color: var(--star-white);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────────────────────────
+   3) Typography
+────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--star-black);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 { font-size: var(--fs-xxl); }
+h2 { font-size: var(--fs-xl);  }
+h3 { font-size: var(--fs-lg);  }
+
+/* Section titles (outside cards) */
+.section-title {
+  font-size: var(--fs-xl);
+  color: var(--star-black);
+  margin: var(--sp-md) 0;
+}
+
+p, a, span, li {
+  font-size: var(--fs-md);
+  color: var(--star-black);
+}
+
+/* ──────────────────────────────────────────────────────────
+   4) Container & Grid
+────────────────────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--sp-md);
+}
+
+/* 3-column layout, with extra 16px gap for vertical spacing */
+.picks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: calc(var(--sp-xl) + 16px);
+}
+
+@media (max-width: 768px) {
+  .picks-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-md);
+
+  }
+}
+
+/* hide Past column on narrow screens */
+@media (max-width: 768px) {
+  .past-column {
+    display: none;
+  }
+
+  .section-title {
+      margin-top: var(--sp-xxl);
+      margin-bottom: var(--sp-md);
+}
+
+}
+
+/* ──────────────────────────────────────────────────────────
+   5) Utility Classes
+────────────────────────────────────────────────────────── */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-md { margin-top: var(--sp-md); }
+.mb-md { margin-bottom: var(--sp-md); }
+.p-md  { padding: var(--sp-md); }
+
+.mb-sm {
+  margin-bottom: var(--sp-sm);
+}
+
+/* ──────────────────────────────────────────────────────────
+   5b) Additional Utilities for Auth & Leaderboard Pages
+────────────────────────────────────────────────────────── */
+
+/* Feedback messages */
+:root {
+  --clr-success: var(--star-victory-green);
+  --clr-danger:  #dc3545;
+}
+
+.text-success {
+  color: var(--clr-success);
+}
+
+.error-message {
+  color: var(--clr-danger);
+}
+
+/* Typography tweaks */
+.fw-bold {
+  font-weight: 700;
+}
+
+.text-lg {
+  font-size: var(--fs-lg);
+}
+
+/* Spacing helpers */
+.mb-lg {
+  margin-bottom: var(--sp-lg);
+}
+
+.mr-sm {
+  margin-right: var(--sp-sm);
+}
+
+/* Podium layout */
+.podium {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-md);
+}
+
+/* Table styles */
+.tableWrapper {
+  overflow-x: auto;
+  margin-top: var(--sp-md);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: var(--sp-sm);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  text-align: left;
+}
+
+/* User cell (avatar + name) */
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+/* Avatar sizes */
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+}
+
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+
+
+/* ──────────────────────────────────────────────────────────
+   6) Navigation (optional)
+────────────────────────────────────────────────────────── */
+.navbar {
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  padding: var(--sp-sm) var(--sp-md);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-light);
+}
+
+.navbar ul {
+  display: flex;
+  gap: var(--sp-lg);
+  list-style: none;
+}
+
+.navbar a {
+  color: var(--star-white);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--fs-md);
+  transition: color var(--trans-all);
+}
+
+.navbar a:hover {
+  color: var(--star-victory-green);
+}
+
+
+/* Navigation */
+.hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.hamburger-bar {
+  display: block;
+  width: 24px;
+  height: 2px;
+  margin: 4px 0;
+  background: var(--star-black);
+  transition: background var(--trans-all);
+}
+.navbar-list {
+  list-style: none;
+  display: flex;
+  gap: var(--sp-lg);
+}
+.navbar-list.mobile {
+  position: absolute;
+  top: var(--sp-lg);
+  right: var(--sp-lg);
+  flex-direction: column;
+  background: rgba(255,255,255,0.9);
+  padding: var(--sp-md);
+  border-radius: var(--radius-sm);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--trans-all);
+}
+.navbar-list.mobile.open {
+  transform: scaleY(1);
+}
+.navbar-item a {
+  text-decoration: none;
+  color: var(--star-black);
+}
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+/* Width helper */
+.w-full {
+  width: 100%;
+}
+
+/* ──────────────────────────────────────────────────────────
+   7) Cards (opaque + black text)
+────────────────────────────────────────────────────────── */
+.card {
+  background: rgba(255,255,255,0.85);
+  color: var(--star-black);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+  padding: var(--sp-xl);
+  box-shadow: var(--shadow-light);
+  transition: box-shadow var(--trans-all), transform var(--trans-all);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ──────────────────────────────────────────────────────────
+   8) Buttons
+────────────────────────────────────────────────────────── */
+.button,
+.btn {
+  display: inline-block;
+  padding: var(--sp-md) var(--sp-xl);
+  background: var(--star-victory-green);
+  color: var(--star-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--trans-all), transform var(--trans-all);
+}
+
+.button:hover,
+.btn:hover {
+  background: var(--star-skyline-green);
+  transform: translateY(-1px);
+}
+
+.button:disabled,
+.btn:disabled {
+  background: rgba(255,255,255,0.3);
+  cursor: not-allowed;
+}
+
+/* Outline variant */
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--star-victory-green);
+  color: var(--star-victory-green);
+}
+
+/* ──────────────────────────────────────────────────────────
+   9) Forms & Inputs
+────────────────────────────────────────────────────────── */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: var(--sp-sm);
+  font-size: var(--fs-md);
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: var(--radius-sm);
+  background: var(--star-white);
+  color: var(--star-black);
+  transition: border-color var(--trans-all);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--star-victory-green);
+}
+
+/* Custom dropdown arrow */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'>\
+<path fill='%23111111' d='M0 0l5 6 5-6z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right var(--sp-sm) center;
+  background-size: 10px 6px;
+  padding-right: var(--sp-xl);
+}
+
+/* ──────────────────────────────────────────────────────────
+   10) Nav Bar
+────────────────────────────────────────────────────────── */
+.navbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  padding: var(--sp-sm) var(--sp-md);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-light);
+}
+
+/* Center the menu list */
+.navbar-list {
+  display: flex;
+  list-style: none;
+  gap: var(--sp-lg);
+  margin: 0;        
+  padding: 0;
+}
+
+/* User block on right */
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  margin-left: auto;
+}
+
+.navbar-user img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.navbar-user span {
+  color: var(--star-white);
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+
+
+/* Desktop items */
+.navbar-item a {
+  color: var(--star-white);
+  text-decoration: none;
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  padding: var(--sp-sm) var(--sp-md);
+  transition: color var(--trans-all);
+}
+.navbar-item a:hover {
+  color: var(--star-victory-green);
+}
+
+/* Mobile dropdown */
+.navbar-list.mobile {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: calc(var(--sp-xxl) + var(--sp-sm));
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  padding: var(--sp-lg);
+  gap: var(--sp-sm);
+}
+
+.navbar-list.mobile.open {
+  display: flex;
+  margin-bottom: var(--sp-xl);
+}
+
+/* ──────────────────────────────────────────────────────────
+   11) Hamburger Menu 
+────────────────────────────────────────────────────────── */
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--sp-sm);
+}
+
+.hamburger-bar {
+  width: 24px;
+  height: 3px;
+  background: var(--star-white);
+  border-radius: 2px;
+}
+
+/* ──────────────────────────────────────────────────────────
+  12) Leaderboard: Podium container
+────────────────────────────────────────────────────────── */
+.podium {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-xl);
+  margin-bottom: var(--sp-xl);
+}
+
+/* force each card to a uniform width */
+.podium > .card {
+  flex: 0 0 200px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   13) Stats Page – Cards Grid
+────────────────────────────────────────────────────────── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--sp-xxl);
+  margin-bottom: var(--sp-xl);
+  text-align:center; 
+}
+
+/* ──────────────────────────────────────────────────────────
+   14) Player Avatar
+────────────────────────────────────────────────────────── */
+.player-pic {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto var(--sp-md);
+}
+
+/* ──────────────────────────────────────────────────────────
+   15) Stat Row (season-stats)
+────────────────────────────────────────────────────────── */
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-md);
+  font-size: var(--fs-sm);
+  margin-top: var(--sp-sm);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+  16) Profile Page Overrides
+────────────────────────────────────────────────────────── */
+
+/* Make the profile card bigger than your standard .card */
+.profile-card {
+  max-width: 600px;                         /* wider than default cards */
+  width: 100%;
+  padding: var(--sp-xl);                    
+  background: var(--star-white);            
+  border-radius: var(--radius-md);          
+  box-shadow: var(--shadow-light);          
+  margin: var(--sp-xxl) auto;               /* vertical spacing + centered */
+  text-align: center;
+}
+
+.profile-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+
+/* Larger, centered avatar */
+.profile-avatar {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto var(--sp-lg);
+}
+
+/* Upload link styling */
+.upload-wrapper {
+  display: inline-block;
+  margin-bottom: var(--sp-lg);
+  cursor: pointer;
+}
+
+.upload-wrapper {
+  margin-top: var(--sp-sm);   /* instead of margin-bottom */
+  cursor: pointer;
+}
+
+.upload-input {
+  display: none;
+}
+
+.upload-text {
+  color: var(--star-victory-green);
+  font-weight: 600;
+}
+
+/* Username text below avatar */
+.profile-username {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  margin-bottom: var(--sp-xl);
+}
+
+/* Form labels & selects */
+.form-label {
+  display: block;
+  text-align: left;
+  margin: var(--sp-md) 0 var(--sp-sm);
+  font-weight: 600;
+}
+
+.select-input {
+  width: 100%;
+  padding: var(--sp-sm) var(--sp-md);
+  border: 1px solid #ccc;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-md);
+}
+
+/* ──────────────────────────────────────────────────────────
+  17) Login Page Overrides
+────────────────────────────────────────────────────────── */
+
+.glass-card {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-light);
+  border-radius: var(--radius-sm);
+}
+
+/* full viewport height helper */
+.vh-100 {
+  min-height: 100vh;
+}
+
+/* large padding (2rem) */
+.p-lg {
+  padding: var(--sp-xl);
+}
+
+/* horizontal gap for flex layouts */
+.gap-lg {
+  gap: var(--sp-lg);
+}
