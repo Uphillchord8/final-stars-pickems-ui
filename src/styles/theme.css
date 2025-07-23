@@ -158,6 +158,18 @@ p, a, span, li {
   margin-bottom: var(--sp-sm);
 }
 
+
+.content {
+  padding: var(--sp-md);
+}
+
+.contentShift {
+  margin-left: 240px; /* or whatever your nav width is */
+  padding: var(--sp-md);
+  transition: margin var(--trans-all);
+}
+
+
 /* ──────────────────────────────────────────────────────────
    5b) Additional Utilities for Auth & Leaderboard Pages
 ────────────────────────────────────────────────────────── */
@@ -219,26 +231,6 @@ p, a, span, li {
   text-align: left;
 }
 
-/* User cell (avatar + name) */
-.userCell {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-}
-
-/* Avatar sizes */
-.avatar {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-}
-
-.avatar-sm {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-}
-
 
 
 /* ──────────────────────────────────────────────────────────
@@ -273,54 +265,6 @@ p, a, span, li {
 }
 
 
-/* Navigation */
-.hamburger {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-.hamburger-bar {
-  display: block;
-  width: 24px;
-  height: 2px;
-  margin: 4px 0;
-  background: var(--star-black);
-  transition: background var(--trans-all);
-}
-.navbar-list {
-  list-style: none;
-  display: flex;
-  gap: var(--sp-lg);
-}
-.navbar-list.mobile {
-  position: absolute;
-  top: var(--sp-lg);
-  right: var(--sp-lg);
-  flex-direction: column;
-  background: rgba(255,255,255,0.9);
-  padding: var(--sp-md);
-  border-radius: var(--radius-sm);
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform var(--trans-all);
-}
-.navbar-list.mobile.open {
-  transform: scaleY(1);
-}
-.navbar-item a {
-  text-decoration: none;
-  color: var(--star-black);
-}
-.navbar-user {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-}
-
-/* Width helper */
-.w-full {
-  width: 100%;
-}
 
 /* ──────────────────────────────────────────────────────────
    7) Cards (opaque + black text)
@@ -340,6 +284,7 @@ p, a, span, li {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
+
 
 /* ──────────────────────────────────────────────────────────
    8) Buttons
@@ -377,6 +322,7 @@ p, a, span, li {
   color: var(--star-victory-green);
 }
 
+
 /* ──────────────────────────────────────────────────────────
    9) Forms & Inputs
 ────────────────────────────────────────────────────────── */
@@ -411,6 +357,7 @@ select {
   background-size: 10px 6px;
   padding-right: var(--sp-xl);
 }
+
 
 /* ──────────────────────────────────────────────────────────
    10) Nav Bar
@@ -491,6 +438,7 @@ select {
   margin-bottom: var(--sp-xl);
 }
 
+
 /* ──────────────────────────────────────────────────────────
    11) Hamburger Menu 
 ────────────────────────────────────────────────────────── */
@@ -511,6 +459,7 @@ select {
   border-radius: 2px;
 }
 
+
 /* ──────────────────────────────────────────────────────────
   12) Leaderboard: Podium container
 ────────────────────────────────────────────────────────── */
@@ -527,6 +476,7 @@ select {
 }
 
 
+
 /* ──────────────────────────────────────────────────────────
    13) Stats Page – Cards Grid
 ────────────────────────────────────────────────────────── */
@@ -538,6 +488,7 @@ select {
   text-align:center; 
 }
 
+
 /* ──────────────────────────────────────────────────────────
    14) Player Avatar
 ────────────────────────────────────────────────────────── */
@@ -548,6 +499,7 @@ select {
   object-fit: cover;
   margin: 0 auto var(--sp-md);
 }
+
 
 /* ──────────────────────────────────────────────────────────
    15) Stat Row (season-stats)
@@ -678,30 +630,38 @@ select {
   18) Sign-Up Page
 ────────────────────────────────────────────────────────── */
 
-/* Signup page tweaks */
 .signup-card {
-  max-width: 500px;
+  max-width: 500px;           /* same width as login card */
 }
 
 .avatar-section {
   display: flex;
   justify-content: center;
-  margin-bottom: var(--sp-md);
+  margin-bottom: var(--sp-lg);
 }
 
-.avatar-preview {
+/* Hide the real file input */
+.upload-input {
+  display: none;
+}
+
+/* Styled trigger link */
+.upload-wrapper {
   display: inline-block;
   cursor: pointer;
-  color: var(--star-black);
+}
+
+/* Link text color & weight */
+.upload-text {
+  color: var(--star-victory-green);
   font-weight: 600;
 }
 
-.avatar-preview-img {
-  display: block;
-  width: 96px;
-  height: 96px;
+/* Re-use your profile-avatar size for a big preview */
+.profile-avatar {
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
-  margin: 0 auto var(--sp-sm);
-}
+  margin-bottom: var(--sp-sm);
 

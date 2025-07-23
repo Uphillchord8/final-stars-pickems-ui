@@ -12,25 +12,21 @@ export default function Login() {
   const [remember, setRemember]     = useState(false);
   const navigate                    = useNavigate();
 
-
-  // Single handleSubmit definition, with a debug log
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('🔥 handleSubmit:', { username, password, remember });
     try {
       await login(username, password, remember);
-      console.log('✅ login succeeded');
-      navigate('/leaderboard');   // send them somewhere you actually have routed
+      navigate('/');          // ← send them here on success
     } catch (err) {
-      console.error('❌ login error:', err);
-      // AuthContext.error will display via your existing error-message block
+      console.error('Login failed', err);
+      // Your <p className="error-message">{error}</p> will show context errors
     }
   };
 
   return (
     <div className="container flex-center vh-100">
       <div className="card glass-card p-lg login-card">
-        <div className="flex-center mb-md gap-lg">
+        <div className="flex-center mb-md">
           <img
             src={heroCartoon}
             alt="Team Mascot"
