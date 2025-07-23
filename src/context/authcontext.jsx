@@ -22,14 +22,18 @@ export const AuthContext = createContext({
 });
 
 export const AuthProvider = ({ children }) => {
-  // 1) Initialize user safely from storage
+  // Initialize user safely from storage, guarding against literal "undefined"
   const [user, setUser] = useState(() => {
-    // Try sessionStorage first, then localStorage
-    const raw =
-      sessionStorage.getItem('user') ||
-      localStorage.getItem('user');
+    const rawSession = sessionStorage.getItem('user');
+    const rawLocal   = localStorage.getItem('user');
+    let raw = rawSession || rawLocal;
 
-    if (!raw) return null;
+    if (raw === 'undefined') {
+      raw = null;
+    }
+    if (!raw) {
+      return null;
+    }
 
     try {
       return JSON.parse(raw);
@@ -45,7 +49,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading]     = useState(false);
   const [error, setError]             = useState(null);
 
-  // 2) Restore token & Axios header on mount
+  // Restore token & Axios header on mount
   useEffect(() => {
     const token =
       sessionStorage.getItem('token') ||
@@ -57,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     setIsRestoring(false);
   }, []);
 
-  // 3) Shared session setter
+  // Shared session setter
   const setSession = useCallback((userData, token, remember) => {
     setUser(userData);
     api.defaults.headers.common.Authorization = `Bearer ${token}`;
@@ -72,7 +76,7 @@ export const AuthProvider = ({ children }) => {
     cleanup.removeItem('user');
   }, []);
 
-  // 4) Auth actions
+  // Login action
   const login = useCallback(
     async (username, password, remember = false) => {
       setError(null);
@@ -95,6 +99,7 @@ export const AuthProvider = ({ children }) => {
     [setSession]
   );
 
+  // Signup action
   const signup = useCallback(
     async (username, email, password, remember = false) => {
       setError(null);
@@ -118,6 +123,7 @@ export const AuthProvider = ({ children }) => {
     [setSession]
   );
 
+  // Logout action
   const logout = useCallback(() => {
     setUser(null);
     delete api.defaults.headers.common.Authorization;
@@ -125,6 +131,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.clear();
   }, []);
 
+  // Reset password action
   const resetPassword = useCallback(
     async email => {
       setError(null);
@@ -132,9 +139,7 @@ export const AuthProvider = ({ children }) => {
       try {
         await api.post('/auth/reset-password', { email });
       } catch (err) {
-        setError(
-          err.response?.data?.error || 'Reset password failed'
-        );
+        setError(err.response?.data?.error || 'Reset password failed');
         throw err;
       } finally {
         setIsLoading(false);
@@ -143,7 +148,7 @@ export const AuthProvider = ({ children }) => {
     []
   );
 
-  // 5) Memoize the context value
+  // Memoize context value
   const value = useMemo(
     () => ({
       user,
@@ -155,16 +160,7 @@ export const AuthProvider = ({ children }) => {
       logout,
       resetPassword
     }),
-    [
-      user,
-      isRestoring,
-      isLoading,
-      error,
-      login,
-      signup,
-      logout,
-      resetPassword
-    ]
+    [user, isRestoring, isLoading, error, login, signup, logout, resetPassword]
   );
 
   return (
