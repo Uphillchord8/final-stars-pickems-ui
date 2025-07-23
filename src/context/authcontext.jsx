@@ -22,69 +22,101 @@ export const AuthContext = createContext({
 });
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser]               = useState(null);
+  // 1) Initialize user safely from storage
+  const [user, setUser] = useState(() => {
+    // Try sessionStorage first, then localStorage
+    const raw =
+      sessionStorage.getItem('user') ||
+      localStorage.getItem('user');
+
+    if (!raw) return null;
+
+    try {
+      return JSON.parse(raw);
+    } catch (err) {
+      console.warn('Invalid user in storage, clearing it.', raw);
+      sessionStorage.removeItem('user');
+      localStorage.removeItem('user');
+      return null;
+    }
+  });
+
   const [isRestoring, setIsRestoring] = useState(true);
   const [isLoading, setIsLoading]     = useState(false);
   const [error, setError]             = useState(null);
 
-  // Restore session on mount
+  // 2) Restore token & Axios header on mount
   useEffect(() => {
-    const token      = sessionStorage.getItem('token')
-                      || localStorage.getItem('token');
-    const storedUser = sessionStorage.getItem('user')
-                      || localStorage.getItem('user');
+    const token =
+      sessionStorage.getItem('token') ||
+      localStorage.getItem('token');
 
-    if (token && storedUser) {
+    if (token) {
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
-      setUser(JSON.parse(storedUser));
     }
     setIsRestoring(false);
   }, []);
 
-  // Shared: set session in context, axios, and storage
+  // 3) Shared session setter
   const setSession = useCallback((userData, token, remember) => {
     setUser(userData);
     api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-    const setter  = remember ? localStorage : sessionStorage;
-    const clearer = remember ? sessionStorage : localStorage;
+    const store   = remember ? localStorage : sessionStorage;
+    const cleanup = remember ? sessionStorage : localStorage;
 
-    setter.setItem('token', token);
-    setter.setItem('user', JSON.stringify(userData));
+    store.setItem('token', token);
+    store.setItem('user', JSON.stringify(userData));
 
-    clearer.removeItem('token');
-    clearer.removeItem('user');
+    cleanup.removeItem('token');
+    cleanup.removeItem('user');
   }, []);
 
-  const login = useCallback(async (username, password, remember = false) => {
-    setError(null);
-    setIsLoading(true);
-    try {
-      const { data } = await api.post('/auth/login', { username, password, remember });
-      setSession(data.user, data.token, remember);
-      return data.user;
-    } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [setSession]);
+  // 4) Auth actions
+  const login = useCallback(
+    async (username, password, remember = false) => {
+      setError(null);
+      setIsLoading(true);
+      try {
+        const { data } = await api.post('/auth/login', {
+          username,
+          password,
+          remember
+        });
+        setSession(data.user, data.token, remember);
+        return data.user;
+      } catch (err) {
+        setError(err.response?.data?.error || 'Login failed');
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setSession]
+  );
 
-  const signup = useCallback(async (username, email, password, remember = false) => {
-    setError(null);
-    setIsLoading(true);
-    try {
-      const { data } = await api.post('/auth/signup', { username, email, password, remember });
-      setSession(data.user, data.token, remember);
-      return data.user;
-    } catch (err) {
-      setError(err.response?.data?.error || 'Signup failed');
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [setSession]);
+  const signup = useCallback(
+    async (username, email, password, remember = false) => {
+      setError(null);
+      setIsLoading(true);
+      try {
+        const { data } = await api.post('/auth/signup', {
+          username,
+          email,
+          password,
+          remember
+        });
+        setSession(data.user, data.token, remember);
+        return data.user;
+      } catch (err) {
+        setError(err.response?.data?.error || 'Signup failed');
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setSession]
+  );
 
   const logout = useCallback(() => {
     setUser(null);
@@ -93,30 +125,47 @@ export const AuthProvider = ({ children }) => {
     localStorage.clear();
   }, []);
 
-  const resetPassword = useCallback(async (email) => {
-    setError(null);
-    setIsLoading(true);
-    try {
-      await api.post('/auth/reset-password', { email });
-    } catch (err) {
-      setError(err.response?.data?.error || 'Reset password failed');
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const resetPassword = useCallback(
+    async email => {
+      setError(null);
+      setIsLoading(true);
+      try {
+        await api.post('/auth/reset-password', { email });
+      } catch (err) {
+        setError(
+          err.response?.data?.error || 'Reset password failed'
+        );
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
 
-  // Memoize context value
-  const value = useMemo(() => ({
-    user,
-    isRestoring,
-    isLoading,
-    error,
-    login,
-    signup,
-    logout,
-    resetPassword
-  }), [user, isRestoring, isLoading, error, login, signup, logout, resetPassword]);
+  // 5) Memoize the context value
+  const value = useMemo(
+    () => ({
+      user,
+      isRestoring,
+      isLoading,
+      error,
+      login,
+      signup,
+      logout,
+      resetPassword
+    }),
+    [
+      user,
+      isRestoring,
+      isLoading,
+      error,
+      login,
+      signup,
+      logout,
+      resetPassword
+    ]
+  );
 
   return (
     <AuthContext.Provider value={value}>
@@ -125,7 +174,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// This hook lets your components access auth state & methods:
+// Custom hook to consume the auth context
 export function useAuth() {
   return useContext(AuthContext);
 }
