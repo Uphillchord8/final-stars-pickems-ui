@@ -22,23 +22,16 @@ export const AuthContext = createContext({
 });
 
 export const AuthProvider = ({ children }) => {
-  // Initialize user safely from storage, guarding against literal "undefined"
+  // Initialize user from storage
   const [user, setUser] = useState(() => {
     const rawSession = sessionStorage.getItem('user');
     const rawLocal   = localStorage.getItem('user');
     let raw = rawSession || rawLocal;
-
-    if (raw === 'undefined') {
-      raw = null;
-    }
-    if (!raw) {
-      return null;
-    }
-
+    if (raw === 'undefined') raw = null;
+    if (!raw) return null;
     try {
       return JSON.parse(raw);
-    } catch (err) {
-      console.warn('Invalid user in storage, clearing it.', raw);
+    } catch {
       sessionStorage.removeItem('user');
       localStorage.removeItem('user');
       return null;
@@ -49,12 +42,11 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading]     = useState(false);
   const [error, setError]             = useState(null);
 
-  // Restore token & Axios header on mount
+  // Restore token on mount
   useEffect(() => {
     const token =
       sessionStorage.getItem('token') ||
       localStorage.getItem('token');
-
     if (token) {
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
     }
@@ -71,21 +63,18 @@ export const AuthProvider = ({ children }) => {
 
     store.setItem('token', token);
     store.setItem('user', JSON.stringify(userData));
-
     cleanup.removeItem('token');
     cleanup.removeItem('user');
   }, []);
 
-  // Login action
+  // Login
   const login = useCallback(
     async (username, password, remember = false) => {
       setError(null);
       setIsLoading(true);
       try {
         const { data } = await api.post('/auth/login', {
-          username,
-          password,
-          remember
+          username, password, remember
         });
         setSession(data.user, data.token, remember);
         return data.user;
@@ -99,19 +88,31 @@ export const AuthProvider = ({ children }) => {
     [setSession]
   );
 
-  // Signup action
+  // Signup (supports both JSON and FormData)
   const signup = useCallback(
-    async (username, email, password, remember = false) => {
+    async (...args) => {
       setError(null);
       setIsLoading(true);
       try {
-        const { data } = await api.post('/auth/signup', {
-          username,
-          email,
-          password,
-          remember
-        });
-        setSession(data.user, data.token, remember);
+        let response;
+        if (args[0] instanceof FormData) {
+          // FormData path (with avatar)
+          response = await api.post(
+            '/auth/signup',
+            args[0],
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+          );
+        } else {
+          // Legacy JSON path
+          const [username, email, password, remember = false] = args;
+          response = await api.post('/auth/signup', {
+            username, email, password, remember
+          });
+        }
+
+        const { data } = response;
+        const rememberFlag = args[3] ?? false;
+        setSession(data.user, data.token, rememberFlag);
         return data.user;
       } catch (err) {
         setError(err.response?.data?.error || 'Signup failed');
@@ -123,7 +124,7 @@ export const AuthProvider = ({ children }) => {
     [setSession]
   );
 
-  // Logout action
+  // Logout
   const logout = useCallback(() => {
     setUser(null);
     delete api.defaults.headers.common.Authorization;
@@ -131,9 +132,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.clear();
   }, []);
 
-  // Reset password action
+  // Reset password
   const resetPassword = useCallback(
-    async email => {
+    async (email) => {
       setError(null);
       setIsLoading(true);
       try {
@@ -148,20 +149,17 @@ export const AuthProvider = ({ children }) => {
     []
   );
 
-  // Memoize context value
-  const value = useMemo(
-    () => ({
-      user,
-      isRestoring,
-      isLoading,
-      error,
-      login,
-      signup,
-      logout,
-      resetPassword
-    }),
-    [user, isRestoring, isLoading, error, login, signup, logout, resetPassword]
-  );
+  // Context value
+  const value = useMemo(() => ({
+    user,
+    isRestoring,
+    isLoading,
+    error,
+    login,
+    signup,
+    logout,
+    resetPassword
+  }), [user, isRestoring, isLoading, error, login, signup, logout, resetPassword]);
 
   return (
     <AuthContext.Provider value={value}>
@@ -170,7 +168,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook to consume the auth context
+// Hook
 export function useAuth() {
   return useContext(AuthContext);
 }

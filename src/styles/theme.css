@@ -17,13 +17,13 @@
 
   /* Typography */
   --font-sans:  'Inter', 'Helvetica Neue', Arial, sans-serif;
-  --fs-xxl:     3.125rem;  /* ~50px (25% ↑ from 40px) */
-  --fs-xl:      2.1875rem; /* ~35px (25% ↑ from 28px) */
-  --fs-lg:      1.5625rem; /* ~25px (25% ↑ from 20px) */
-  --fs-md:      1rem;      /* ~16px */
-  --fs-sm:      0.875rem;  /* ~14px */
+  --fs-xxl:     3.125rem;
+  --fs-xl:      2.1875rem;
+  --fs-lg:      1.5625rem;
+  --fs-md:      1rem;
+  --fs-sm:      0.875rem;
 
-  /* Spacing Scale */
+  /* Spacing */
   --sp-xxl:     32px;
   --sp-xl:      24px;
   --sp-md:      16px;
@@ -39,35 +39,24 @@
   /* Transitions */
   --trans-all: 200ms ease-in-out;
 
-  /* Container Width (30% wider than 1200px) */
+  /* Container Max Width */
   --container-max: 1560px;
 }
 
 /* ──────────────────────────────────────────────────────────
    2) Reset & Base Styles
 ────────────────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html {
-  font-size: 100%; /* 16px */
-}
-
+html { font-size: 100%; }
 body {
   min-height: 100vh;
   background:
-    /* green overlay */
-    linear-gradient(
-      to bottom right,
-      var(--overlay-victory-green),
-      var(--overlay-victory-green)
-    ),
-    /* fan photo */
+    linear-gradient(to bottom right, var(--overlay-victory-green), var(--overlay-victory-green)),
     url('../assets/aac-fans.jpg') center/cover no-repeat fixed;
   color: var(--star-white);
   font-family: var(--font-sans);
@@ -77,24 +66,16 @@ body {
 /* ──────────────────────────────────────────────────────────
    3) Typography
 ────────────────────────────────────────────────────────── */
-h1, h2, h3, h4, h5, h6 {
+h1,h2,h3,h4,h5,h6 {
   color: var(--star-black);
   font-weight: 700;
   line-height: 1.2;
 }
-
 h1 { font-size: var(--fs-xxl); }
-h2 { font-size: var(--fs-xl);  }
-h3 { font-size: var(--fs-lg);  }
+h2 { font-size: var(--fs-xl); }
+h3 { font-size: var(--fs-lg); }
 
-/* Section titles (outside cards) */
-.section-title {
-  font-size: var(--fs-xl);
-  color: var(--star-black);
-  margin: var(--sp-md) 0;
-}
-
-p, a, span, li {
+p,a,span,li {
   font-size: var(--fs-md);
   color: var(--star-black);
 }
@@ -109,65 +90,16 @@ p, a, span, li {
   padding: 0 var(--sp-md);
 }
 
-/* 3-column layout, with extra 16px gap for vertical spacing */
-.picks-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: calc(var(--sp-xl) + 16px);
-}
-
-@media (max-width: 768px) {
-  .picks-grid {
-    grid-template-columns: 1fr;
-    gap: var(--sp-md);
-
-  }
-}
-
-/* hide Past column on narrow screens */
-@media (max-width: 768px) {
-  .past-column {
-    display: none;
-  }
-
-  .section-title {
-      margin-top: var(--sp-xxl);
-      margin-bottom: var(--sp-md);
-}
-
-}
-
 /* ──────────────────────────────────────────────────────────
    5) Utility Classes
 ────────────────────────────────────────────────────────── */
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.text-center {
-  text-align: center;
-}
-
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.text-center { text-align: center; }
 .mt-md { margin-top: var(--sp-md); }
 .mb-md { margin-bottom: var(--sp-md); }
 .p-md  { padding: var(--sp-md); }
+.mb-sm { margin-bottom: var(--sp-sm); }
 
-.mb-sm {
-  margin-bottom: var(--sp-sm);
-}
-
-
-.content {
-  padding: var(--sp-md);
-}
-
-.contentShift {
-  margin-left: 240px; /* or whatever your nav width is */
-  padding: var(--sp-md);
-  transition: margin var(--trans-all);
-}
 
 
 /* ──────────────────────────────────────────────────────────
@@ -627,11 +559,10 @@ select {
 
 
 /* ──────────────────────────────────────────────────────────
-  18) Sign-Up Page
+   18) Sign-Up Page Overrides
 ────────────────────────────────────────────────────────── */
-
 .signup-card {
-  max-width: 500px;           /* same width as login card */
+  max-width: 500px;
 }
 
 .avatar-section {
@@ -645,24 +576,35 @@ select {
   display: none;
 }
 
-/* Styled trigger link */
+/* Label wrapper for upload link / preview */
 .upload-wrapper {
   display: inline-block;
   cursor: pointer;
 }
 
-/* Link text color & weight */
+/* Green link text */
 .upload-text {
   color: var(--star-victory-green);
   font-weight: 600;
 }
 
-/* Re-use your profile-avatar size for a big preview */
+/* Circular avatar preview */
 .profile-avatar {
   width: 200px;
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: var(--sp-sm);
-
 }
+
+/* Tighter spacing between fields */
+.signup-card .form-group {
+  margin-bottom: var(--sp-sm);
+}
+
+/* Center & separate the Sign-Up button */
+.signup-card button {
+  display: block;
+  margin: var(--sp-md) auto 0;
+}
+

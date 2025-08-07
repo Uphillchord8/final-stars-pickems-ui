@@ -1,20 +1,19 @@
 // src/components/Signup.jsx
-
 import React, { useRef, useState } from 'react';
 import { Link, useNavigate }       from 'react-router-dom';
 import { useAuth }                 from '../context/authcontext';
 
 export default function Signup() {
-  const usernameRef           = useRef();
-  const emailRef              = useRef();
-  const passwordRef           = useRef();
-  const passwordConfirmRef    = useRef();
-  const fileInputRef          = useRef();
-  const { signup }            = useAuth();
-  const [error, setError]     = useState('');
+  const usernameRef        = useRef();
+  const emailRef           = useRef();
+  const passwordRef        = useRef();
+  const passwordConfirmRef = useRef();
+  const fileInputRef       = useRef();
+  const { signup }         = useAuth();
+  const [error, setError]  = useState('');
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
-  const navigate              = useNavigate();
+  const navigate           = useNavigate();
 
   function handleFileChange(e) {
     const file = e.target.files[0];
@@ -27,9 +26,8 @@ export default function Signup() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    const username = usernameRef.current.value;
-    const email    = emailRef.current.value;
+    const username = usernameRef.current.value.trim();
+    const email    = emailRef.current.value.trim();
     const pwd      = passwordRef.current.value;
     const confirm  = passwordConfirmRef.current.value;
 
@@ -37,11 +35,18 @@ export default function Signup() {
       return setError('Passwords do not match');
     }
 
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('email',    email);
+    formData.append('password', pwd);
+    if (fileInputRef.current.files[0]) {
+      formData.append('avatar', fileInputRef.current.files[0]);
+    }
+
     try {
       setError('');
       setLoading(true);
-      // Pass username, email, password to your signup API
-      await signup(username, email, pwd);
+      await signup(formData);
       navigate('/');
     } catch {
       setError('Failed to create an account');
@@ -53,66 +58,63 @@ export default function Signup() {
   return (
     <div className="container flex-center vh-100">
       <div className="card p-lg signup-card">
-        <h2 className="title">Create Your Account</h2>
+        <h2 className="title text-center mb-md">Create Your Account</h2>
 
-        {error && <div className="error">{error}</div>}
+        {error && <div className="error-message mb-md">{error}</div>}
 
         <form onSubmit={handleSubmit} className="form">
-          <div className="avatar-section">
+          <div className="avatar-section mb-md">
             <input
               type="file"
               id="avatar"
               accept="image/*"
-              className="file-input"
+              className="upload-input"
               ref={fileInputRef}
               onChange={handleFileChange}
             />
-            <label htmlFor="avatar" className="avatar-preview">
+            <label htmlFor="avatar" className="upload-wrapper">
               {preview
                 ? <img
                     src={preview}
                     alt="Avatar Preview"
-                    className="avatar-preview-img"
+                    className="profile-avatar"
                   />
-                : 'Upload Avatar'}
+                : <span className="upload-text">Upload Avatar</span>}
             </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="username" className="form-label">
-              Username
-            </label>
+            <label htmlFor="username" className="form-label">Username</label>
             <input
               id="username"
               type="text"
               ref={usernameRef}
               className="form-input"
+              placeholder="eg. golfFan123"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email" className="form-label">
-              Email
-            </label>
+            <label htmlFor="email" className="form-label">Email</label>
             <input
               id="email"
               type="email"
               ref={emailRef}
               className="form-input"
+              placeholder="you@example.com"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password" className="form-label">
-              Password
-            </label>
+            <label htmlFor="password" className="form-label">Password</label>
             <input
               id="password"
               type="password"
               ref={passwordRef}
               className="form-input"
+              placeholder="••••••••"
               required
             />
           </div>
@@ -126,6 +128,7 @@ export default function Signup() {
               type="password"
               ref={passwordConfirmRef}
               className="form-input"
+              placeholder="••••••••"
               required
             />
           </div>
@@ -139,7 +142,7 @@ export default function Signup() {
           </button>
         </form>
 
-        <div className="footer-text mt-md">
+        <div className="footer-text text-center mt-md">
           Already have an account? <Link to="/login">Log In</Link>
         </div>
       </div>
