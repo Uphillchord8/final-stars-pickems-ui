@@ -561,9 +561,6 @@ select {
 /* ──────────────────────────────────────────────────────────
    18) Sign-Up Page Overrides
 ────────────────────────────────────────────────────────── */
-.signup-card {
-  max-width: 500px;
-}
 
 .avatar-section {
   display: flex;
