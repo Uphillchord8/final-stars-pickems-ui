@@ -57,18 +57,18 @@ export default function Signup() {
 
   return (
     <div className="container flex-center vh-100">
-      <div className="card p-lg signup-card">
+      <div className="signup-card mb-mb">
         <h2 className="title text-center mb-md">Create Your Account</h2>
 
         {error && <div className="error-message mb-md">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="form">
+        <form onSubmit={handleSubmit} className="input">
           <div className="avatar-section mb-md">
             <input
               type="file"
               id="avatar"
               accept="image/*"
-              className="upload-input"
+              className="button"
               ref={fileInputRef}
               onChange={handleFileChange}
             />
@@ -77,20 +77,20 @@ export default function Signup() {
                 ? <img
                     src={preview}
                     alt="Avatar Preview"
-                    className="profile-avatar"
+                    className="player-pic"
                   />
                 : <span className="upload-text">Upload Avatar</span>}
             </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="username" className="form-label">Username</label>
+            <label htmlFor="username" className="input">Username</label>
             <input
               id="username"
               type="text"
               ref={usernameRef}
               className="form-input"
-              placeholder="eg. golfFan123"
+              placeholder="StarsFan123"
               required
             />
           </div>
