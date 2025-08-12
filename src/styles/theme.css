@@ -415,9 +415,6 @@ select {
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--sp-xxl);
-  margin-bottom: var(--sp-xl);
-  text-align:center; 
 }
 
 
