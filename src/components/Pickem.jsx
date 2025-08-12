@@ -1,11 +1,13 @@
 // src/components/Pickem.jsx
+
 import React, { useEffect, useState } from 'react';
 import api from '../utils/api';
 
 export default function Pickem() {
-  const [games, setGames] = useState([]);
+  const [games, setGames]       = useState([]);
   const [selected, setSelected] = useState({});
 
+  // Fetch games once
   useEffect(() => {
     api.get('/games')
       .then(res => {
@@ -36,12 +38,14 @@ export default function Pickem() {
     }
   };
 
-  const now    = new Date();
-  const sorted = [...games].sort((a, b) => new Date(a.gameTime) - new Date(b.gameTime));
+  // Split games into past / next / upcoming
+  const now      = new Date();
+  const sorted   = [...games].sort((a, b) => new Date(a.gameTime) - new Date(b.gameTime));
   const upcoming = sorted.filter(g => new Date(g.gameTime) >= now);
   const past     = sorted.filter(g => new Date(g.gameTime) <  now);
   const nextGame = upcoming.shift();
 
+  // Render a single card (logos + names + pick UI or results)
   const renderCard = (game, isPast = false) => {
     const gameTime     = new Date(game.gameTime);
     const msUntilStart = gameTime - now;
@@ -57,88 +61,85 @@ export default function Pickem() {
 
     return (
       <div key={game._id} className="card mb-md">
-        {/* Logos + Names */}
         <div className="flex-center mb-sm" style={{ gap: 'var(--sp-md)' }}>
           {['home', 'away'].map(side => {
-            const logoKey = side + 'Logo';
-            const teamKey = side + 'Team';
+            const logoKey = `${side}Logo`;
+            const teamKey = `${side}Team`;
             const logoUrl = game[logoKey];
             const team    = game[teamKey];
 
             return (
               <div key={side} className="flex-column flex-center">
-                {logoUrl
-                  ? <img
-                      src={logoUrl}
-                      alt={`${team} logo`}
-                      className="avatar-sm mb-xs"
-                      onError={e => { e.currentTarget.style.display = 'none'; }}
-                    />
-                  : <div className="avatar-sm mb-xs bg-gray"></div>
-                }
+                {logoUrl ? (
+                  <img
+                    src={logoUrl}
+                    alt={`${team} logo`}
+                    className="avatar-sm mb-xs"
+                    onError={e => { e.currentTarget.style.display = 'none'; }}
+                  />
+                ) : (
+                  <div className="avatar-sm mb-xs bg-gray"></div>
+                )}
                 <span className="text-sm fw-bold">{team}</span>
               </div>
             );
           })}
-
           <span className="fw-bold text-lg mx-sm">vs</span>
         </div>
 
         <p className="text-center mb-sm">{dateStr} {timeStr} CT</p>
 
-        {isPast
-          ? (
-            <div>
-              <p>
-                <strong>First Goal:</strong>{' '}
-                {game.players.find(p => p._id === game.firstGoalPlayerId)?.name || '—'}
-              </p>
-              <p>
-                <strong>GWG:</strong>{' '}
-                {game.players.find(p => p._id === game.gwGoalPlayerId)?.name || '—'}
-              </p>
+        {isPast ? (
+          <div>
+            <p>
+              <strong>First Goal:</strong>{' '}
+              {game.players.find(p => p._id === game.firstGoalPlayerId)?.name || '—'}
+            </p>
+            <p>
+              <strong>GWG:</strong>{' '}
+              {game.players.find(p => p._id === game.gwGoalPlayerId)?.name || '—'}
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="flex-center mb-sm" style={{ gap: 'var(--sp-md)' }}>
+              {['firstGoal', 'gwGoal'].map(field => (
+                <div key={field} style={{ flex: 1 }}>
+                  <label htmlFor={`${field}-${game._id}`}>
+                    {field === 'firstGoal' ? 'First Goal' : 'Game Winning Goal'}
+                  </label>
+                  <select
+                    id={`${field}-${game._id}`}
+                    className="select-input"
+                    value={selected[game._id]?.[field] || ''}
+                    onChange={e => handleSelect(game._id, field, e.target.value)}
+                    disabled={locked}
+                  >
+                    <option value="">{locked ? '—' : 'Select Player'}</option>
+                    {game.players.map(p => (
+                      <option key={p._id} value={p._id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
             </div>
-          )
-          : (
-            <>
-              <div className="flex-center mb-sm" style={{ gap: 'var(--sp-md)' }}>
-                {['firstGoal', 'gwGoal'].map(field => (
-                  <div key={field} style={{ flex: 1 }}>
-                    <label htmlFor={`${field}-${game._id}`}>
-                      {field === 'firstGoal' ? 'First Goal' : 'Game Winning Goal'}
-                    </label>
-                    <select
-                      id={`${field}-${game._id}`}
-                      className="select-input"
-                      value={selected[game._id]?.[field] || ''}
-                      onChange={e => handleSelect(game._id, field, e.target.value)}
-                      disabled={locked}
-                    >
-                      <option value="">{locked ? '—' : 'Select Player'}</option>
-                      {game.players.map(p => (
-                        <option key={p._id} value={p._id}>{p.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                ))}
-              </div>
 
-              <button
-                className="button w-full"
-                onClick={() => handleSubmit(game._id)}
-                disabled={locked}
-              >
-                Submit Pick
-              </button>
-            </>
-          )}
+            <button
+              className="button w-full"
+              onClick={() => handleSubmit(game._id)}
+              disabled={locked}
+            >
+              Submit Pick
+            </button>
+          </>
+        )}
       </div>
     );
   };
 
   return (
     <div className="container">
-      <div className="picks-grid">
+      <div className="card-grid">
         {past.length > 0 && (
           <div className="past-column">
             <h2 className="section-title">Past Games</h2>
@@ -147,14 +148,14 @@ export default function Pickem() {
         )}
 
         {nextGame && (
-          <div>
+          <div className="next-column">
             <h2 className="section-title">Next Game</h2>
             {renderCard(nextGame)}
           </div>
         )}
 
         {upcoming.length > 0 && (
-          <div>
+          <div className="upcoming-column">
             <h2 className="section-title">Upcoming Games</h2>
             {upcoming.map(game => renderCard(game))}
           </div>
