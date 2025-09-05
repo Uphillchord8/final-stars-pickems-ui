@@ -7,13 +7,20 @@ import { AuthContext } from '../context/authcontext';
 export default function Profile() {
   const { user, setUser } = useContext(AuthContext);
 
-  const [avatarPreview, setAvatarPreview]         = useState(user.avatarUrl || '/assets/default-avatar.png');
+  // 1) avatarPreview now gets reset whenever user.avatarUrl changes
+  const [avatarPreview, setAvatarPreview] = useState(
+    user.avatarUrl || '/assets/default-avatar.png'
+  );
+  useEffect(() => {
+    setAvatarPreview(user.avatarUrl || '/assets/default-avatar.png');
+  }, [user.avatarUrl]);
+
   const [firstGoalPlayers, setFirstGoalPlayers] = useState([]);
   const [gwgPlayers, setGwgPlayers]             = useState([]);
   const [defaultFirstGoal, setDefaultFirstGoal] = useState(user.defaultFirstGoal || '');
   const [defaultGWG, setDefaultGWG]             = useState(user.defaultGWG || '');
 
-  // 1) Load players list
+  // Load the players
   useEffect(() => {
     api.get('/players')
       .then(res => {
@@ -23,25 +30,28 @@ export default function Profile() {
       .catch(console.error);
   }, []);
 
-  // 2) Persist defaultFirstGoal
+  // Persist defaultFirstGoal
   useEffect(() => {
     if (!defaultFirstGoal) return;
     api.post('/user/defaults', { defaultFirstGoal })
       .then(res => {
         const updated = { ...user, defaultFirstGoal: res.data.defaultFirstGoal };
         setUser(updated);
+        // keep defaults in both storages
+        sessionStorage.setItem('user', JSON.stringify(updated));
         localStorage.setItem('user', JSON.stringify(updated));
       })
       .catch(console.error);
   }, [defaultFirstGoal, user, setUser]);
 
-  // 3) Persist defaultGWG
+  // Persist defaultGWG
   useEffect(() => {
     if (!defaultGWG) return;
     api.post('/user/defaults', { defaultGWG })
       .then(res => {
         const updated = { ...user, defaultGWG: res.data.defaultGWG };
         setUser(updated);
+        sessionStorage.setItem('user', JSON.stringify(updated));
         localStorage.setItem('user', JSON.stringify(updated));
       })
       .catch(console.error);
@@ -53,10 +63,8 @@ export default function Profile() {
     if (!file?.type.startsWith('image/')) return;
 
     // show a local preview immediately
-    const previewUrl = URL.createObjectURL(file);
-    setAvatarPreview(previewUrl);
+    setAvatarPreview(URL.createObjectURL(file));
 
-    // prepare FormData
     const formData = new FormData();
     formData.append('avatar', file);
 
@@ -65,12 +73,9 @@ export default function Profile() {
         const updated = { ...user, avatarUrl: res.data.avatarUrl };
         setUser(updated);
 
-        // Persist into whichever storage AuthContext reads from
-        if (sessionStorage.getItem('user')) {
-          sessionStorage.setItem('user', JSON.stringify(updated));
-        } else {
-          localStorage.setItem('user', JSON.stringify(updated));
-        }
+        // write into both storages so AuthContext picks up the new avatar
+        sessionStorage.setItem('user', JSON.stringify(updated));
+        localStorage.setItem('user', JSON.stringify(updated));
       })
       .catch(console.error);
   };
@@ -102,6 +107,7 @@ export default function Profile() {
 
         <p className="text-center mb-md">@{user.username}</p>
 
+        {/* defaults selects */}
         <div className="mb-md">
           <label className="form-label">Default First Goal</label>
           <select
@@ -111,13 +117,10 @@ export default function Profile() {
           >
             <option value="">Select Player</option>
             {firstGoalPlayers.map(p => (
-              <option key={p._id} value={p._id}>
-                {p.name}
-              </option>
+              <option key={p._id} value={p._id}>{p.name}</option>
             ))}
           </select>
         </div>
-
         <div className="mb-md">
           <label className="form-label">Default GWG</label>
           <select
@@ -127,9 +130,7 @@ export default function Profile() {
           >
             <option value="">Select Player</option>
             {gwgPlayers.map(p => (
-              <option key={p._id} value={p._id}>
-                {p.name}
-              </option>
+              <option key={p._id} value={p._id}>{p.name}</option>
             ))}
           </select>
         </div>
