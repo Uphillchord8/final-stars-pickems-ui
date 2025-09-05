@@ -1,3 +1,5 @@
+// src/components/Profile.jsx
+
 import React, { useState, useEffect, useContext } from 'react';
 import api from '../utils/api';
 import { AuthContext } from '../context/authcontext';
@@ -50,9 +52,11 @@ export default function Profile() {
     const file = e.target.files[0];
     if (!file?.type.startsWith('image/')) return;
 
+    // show a local preview immediately
     const previewUrl = URL.createObjectURL(file);
     setAvatarPreview(previewUrl);
 
+    // prepare FormData
     const formData = new FormData();
     formData.append('avatar', file);
 
@@ -60,12 +64,14 @@ export default function Profile() {
       .then(res => {
         const updated = { ...user, avatarUrl: res.data.avatarUrl };
         setUser(updated);
-        if (sessionStorage.getItem('user')) {
-        sessionStorage.setItem('user', JSON.stringify(updated));
-        else {
-        localStorage.setItem('user', JSON.stringify(updated));
-      }
 
+        // Persist into whichever storage AuthContext reads from
+        if (sessionStorage.getItem('user')) {
+          sessionStorage.setItem('user', JSON.stringify(updated));
+        } else {
+          localStorage.setItem('user', JSON.stringify(updated));
+        }
+      })
       .catch(console.error);
   };
 
@@ -77,7 +83,7 @@ export default function Profile() {
         <div className="flex-center mb-md">
           <img
             src={avatarPreview}
-            alt="avatar"
+            alt="User avatar"
             className="avatar"
           />
         </div>
@@ -94,7 +100,7 @@ export default function Profile() {
           </label>
         </div>
 
-        <p className="text-center mb-md">{user.username}</p>
+        <p className="text-center mb-md">@{user.username}</p>
 
         <div className="mb-md">
           <label className="form-label">Default First Goal</label>
