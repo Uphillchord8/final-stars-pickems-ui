@@ -62,7 +62,7 @@ export default function Profile() {
         setUser(updated);
         if (sessionStorage.getItem('user')) {
         sessionStorage.setItem('user', JSON.stringify(updated));
-      } else {
+        else {
         localStorage.setItem('user', JSON.stringify(updated));
       }
 
