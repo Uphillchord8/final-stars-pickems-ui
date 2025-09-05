@@ -60,8 +60,12 @@ export default function Profile() {
       .then(res => {
         const updated = { ...user, avatarUrl: res.data.avatarUrl };
         setUser(updated);
+        if (sessionStorage.getItem('user')) {
+        sessionStorage.setItem('user', JSON.stringify(updated));
+      } else {
         localStorage.setItem('user', JSON.stringify(updated));
-      })
+      }
+
       .catch(console.error);
   };
 
@@ -73,7 +77,7 @@ export default function Profile() {
         <div className="flex-center mb-md">
           <img
             src={avatarPreview}
-            alt="User avatar"
+            alt="avatar"
             className="avatar"
           />
         </div>
@@ -90,7 +94,7 @@ export default function Profile() {
           </label>
         </div>
 
-        <p className="text-center mb-md">@{user.username}</p>
+        <p className="text-center mb-md">{user.username}</p>
 
         <div className="mb-md">
           <label className="form-label">Default First Goal</label>
