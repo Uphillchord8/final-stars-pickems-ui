@@ -86,8 +86,7 @@ export default function Profile() {
         <h2 className="section-title">Your Profile</h2>
 
         <div className="flex-center mb-md">
-          <img
-             <img src={avatarSrc} alt="Avatar" className="avatar" />
+            <img src={avatarSrc} alt="Avatar" className="avatar" />
 
         </div>
 
