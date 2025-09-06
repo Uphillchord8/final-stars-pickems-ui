@@ -12,6 +12,7 @@ import api from '../utils/api';
 
 export const AuthContext = createContext({
   user: null,
+  setUser: () => {},
   isRestoring: true,
   isLoading: false,
   error: null,
@@ -152,6 +153,7 @@ export const AuthProvider = ({ children }) => {
   // Context value
   const value = useMemo(() => ({
     user,
+    setUser,
     isRestoring,
     isLoading,
     error,
