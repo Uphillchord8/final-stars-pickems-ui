@@ -4,10 +4,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import api from '../utils/api';
 import { AuthContext } from '../context/authcontext';
 
+const API = process.env.REACT_APP_API_URL;  
+// e.g. "https://dallas-stars-pickems-27161.nodechef.com"
+
 export default function Profile() {
   const { user, setUser } = useContext(AuthContext);
 
-  // 1) avatarPreview now gets reset whenever user.avatarUrl changes
+  // 1) avatarPreview now resets whenever user.avatarUrl changes
   const [avatarPreview, setAvatarPreview] = useState(
     user.avatarUrl || '/assets/default-avatar.png'
   );
@@ -15,12 +18,13 @@ export default function Profile() {
     setAvatarPreview(user.avatarUrl || '/assets/default-avatar.png');
   }, [user.avatarUrl]);
 
+  // 2) Players and defaults state
   const [firstGoalPlayers, setFirstGoalPlayers] = useState([]);
   const [gwgPlayers, setGwgPlayers]             = useState([]);
   const [defaultFirstGoal, setDefaultFirstGoal] = useState(user.defaultFirstGoal || '');
   const [defaultGWG, setDefaultGWG]             = useState(user.defaultGWG || '');
 
-  // Load the players
+  // 3) Load all players once
   useEffect(() => {
     api.get('/players')
       .then(res => {
@@ -30,21 +34,20 @@ export default function Profile() {
       .catch(console.error);
   }, []);
 
-  // Persist defaultFirstGoal
+  // 4) Persist defaultFirstGoal
   useEffect(() => {
     if (!defaultFirstGoal) return;
     api.post('/user/defaults', { defaultFirstGoal })
       .then(res => {
         const updated = { ...user, defaultFirstGoal: res.data.defaultFirstGoal };
         setUser(updated);
-        // keep defaults in both storages
         sessionStorage.setItem('user', JSON.stringify(updated));
         localStorage.setItem('user', JSON.stringify(updated));
       })
       .catch(console.error);
   }, [defaultFirstGoal, user, setUser]);
 
-  // Persist defaultGWG
+  // 5) Persist defaultGWG
   useEffect(() => {
     if (!defaultGWG) return;
     api.post('/user/defaults', { defaultGWG })
@@ -57,7 +60,7 @@ export default function Profile() {
       .catch(console.error);
   }, [defaultGWG, user, setUser]);
 
-  // 4) Upload & preview avatar
+  // 6) Upload & preview avatar
   const handleUpload = e => {
     const file = e.target.files[0];
     if (!file?.type.startsWith('image/')) return;
@@ -72,13 +75,21 @@ export default function Profile() {
       .then(res => {
         const updated = { ...user, avatarUrl: res.data.avatarUrl };
         setUser(updated);
-
-        // write into both storages so AuthContext picks up the new avatar
         sessionStorage.setItem('user', JSON.stringify(updated));
         localStorage.setItem('user', JSON.stringify(updated));
       })
       .catch(console.error);
   };
+
+  // Helper to build a full URL for the avatar
+  const getAvatarSrc = urlPath => {
+    if (!urlPath) return '/assets/default-avatar.png';
+    if (urlPath.startsWith('http')) return urlPath;
+    return `${API}${urlPath}`;
+  };
+
+  // Compute the final src for the <img>
+  const avatarSrc = getAvatarSrc(avatarPreview);
 
   return (
     <div className="container mb-lg">
@@ -86,8 +97,11 @@ export default function Profile() {
         <h2 className="section-title">Your Profile</h2>
 
         <div className="flex-center mb-md">
-            <img src={avatarSrc} alt="Avatar" className="avatar" />
-
+          <img
+            src={avatarSrc}
+            alt="User avatar"
+            className="avatar"
+          />
         </div>
 
         <div className="flex-center mb-md">
@@ -102,9 +116,8 @@ export default function Profile() {
           </label>
         </div>
 
-        <p className="text-center mb-md"> {user.username} </p>
+        <p className="text-center mb-md">@{user.username}</p>
 
-        {/* defaults selects */}
         <div className="mb-md">
           <label className="form-label">Default First Goal</label>
           <select
@@ -118,6 +131,7 @@ export default function Profile() {
             ))}
           </select>
         </div>
+
         <div className="mb-md">
           <label className="form-label">Default GWG</label>
           <select
