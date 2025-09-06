@@ -87,10 +87,8 @@ export default function Profile() {
 
         <div className="flex-center mb-md">
           <img
-            src={avatarPreview}
-            alt="User avatar"
-            className="avatar"
-          />
+             <img src={avatarSrc} alt="Avatar" className="avatar" />
+
         </div>
 
         <div className="flex-center mb-md">
@@ -105,7 +103,7 @@ export default function Profile() {
           </label>
         </div>
 
-        <p className="text-center mb-md">@{user.username}</p>
+        <p className="text-center mb-md">{user.username}</p>
 
         {/* defaults selects */}
         <div className="mb-md">
