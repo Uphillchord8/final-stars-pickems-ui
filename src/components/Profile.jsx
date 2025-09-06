@@ -116,7 +116,7 @@ export default function Profile() {
           </label>
         </div>
 
-        <p className="text-center mb-md">@{user.username}</p>
+        <p className="text-center mb-md"> {user.username} </p>
 
         <div className="mb-md">
           <label className="form-label">Default First Goal</label>
