@@ -1,10 +1,21 @@
+// src/components/Navigation.jsx
+
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { AuthContext } from '../context/authcontext';
+import { Link }                                 from 'react-router-dom';
+import { AuthContext }                          from '../context/authcontext';
+
+const API = process.env.REACT_APP_API_URL;  
+// e.g. "https://dallas-stars-pickems-27161.nodechef.com"
+
+function getAvatarSrc(urlPath) {
+  if (!urlPath) return '/assets/default-avatar.png';
+  if (urlPath.startsWith('http')) return urlPath;
+  return `${API}${urlPath}`;
+}
 
 export default function Nav({ navOpen, setNavOpen }) {
   const { user } = useContext(AuthContext);
-  const navRef = useRef();
+  const navRef    = useRef();
   const burgerRef = useRef();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -82,10 +93,11 @@ export default function Nav({ navOpen, setNavOpen }) {
   ) : (
     <nav className="navbar">
       <ul className="navbar-list">{menuItems}</ul>
+
       {user && (
         <div className="navbar-user">
           <img
-            src={user.avatarUrl || '/assets/default-avatar.png'}
+            src={getAvatarSrc(user.avatarUrl)}
             alt={`${user.username} avatar`}
             className="avatar-sm"
           />
