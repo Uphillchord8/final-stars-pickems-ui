@@ -103,7 +103,7 @@ export default function Profile() {
           </label>
         </div>
 
-        <p className="text-center mb-md">{user.username}</p>
+        <p className="text-center mb-md"> {user.username} </p>
 
         {/* defaults selects */}
         <div className="mb-md">
