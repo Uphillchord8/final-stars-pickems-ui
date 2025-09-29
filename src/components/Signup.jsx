@@ -140,7 +140,6 @@ export default function Signup() {
           <button
             type="submit"
             className="button"
-	    className="mt-md"
             disabled={loading}
           >
             {loading ? 'Signing up…' : 'Sign Up'}
