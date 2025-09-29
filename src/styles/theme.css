@@ -163,7 +163,13 @@ p,a,span,li {
   text-align: left;
 }
 
-
+.remember {
+  display: inline-flex;
+  align-items: center;      /* vertically centers box and text */
+  gap: 0.5rem;              /* spacing between checkbox and text */
+  cursor: pointer;
+  user-select: none;
+}
 
 /* ──────────────────────────────────────────────────────────
    6) Navigation (optional)
