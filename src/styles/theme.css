@@ -225,6 +225,7 @@ p,a,span,li {
 .btn {
   display: inline-block;
   padding: var(--sp-md) var(--sp-xl);
+  margin: flex-center ;
   margin-top: 15px;
   background: var(--star-victory-green);
   color: var(--star-white);
