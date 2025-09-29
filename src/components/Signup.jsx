@@ -56,34 +56,38 @@ export default function Signup() {
   }
 
   return (
-    <div className="container flex-center vh-100">
-      <div className="signup-card mb-mb">
-        <h2 className="title text-center mb-md">Create Your Account</h2>
+    <div className="container mb-lg">
+      <div className="card">
+        <h2 className="section-title">Create Your Account</h2>
 
         {error && <div className="error-message mb-md">{error}</div>}
 
         <form onSubmit={handleSubmit} className="input">
-          <div className="avatar-section mb-md">
-            <input
-              type="file"
-              id="avatar"
-              accept="image/*"
-              className="button"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-            />
-            <label htmlFor="avatar" className="upload-wrapper">
-              {preview
-                ? <img
-                    src={preview}
-                    alt="Avatar Preview"
-                    className="player-pic"
-                  />
-                : <span className="upload-text">Upload Avatar</span>}
-            </label>
-          </div>
+	  <div className="avatar-section mb-md">
+	    <label htmlFor="avatar" className="upload-wrapper">
+    	  {preview ? (
+        	<img
+        	  src={preview}
+          	alt="Avatar Preview"
+          	className="player-pic"
+       	 />
+     	 ) : (
+     	   <span className="upload-text">Upload Avatar</span>
+    	  )}
+    	  <input
+        	type="file"
+        	id="avatar"
+        	accept="image/*"
+        	className="upload-input"    // visually hidden via CSS
+        	ref={fileInputRef}
+        	onChange={handleFileChange}
+     	 />
+    		</label>
+ 	 </div>
 
-          <div className="form-group">
+
+
+       <div className="form-group">
             <label htmlFor="username" className="input">Username</label>
             <input
               id="username"
@@ -93,9 +97,9 @@ export default function Signup() {
               placeholder="StarsFan123"
               required
             />
-          </div>
+         </div>
 
-          <div className="form-group">
+       <div className="form-group">
             <label htmlFor="email" className="form-label">Email</label>
             <input
               id="email"
