@@ -224,10 +224,7 @@ p,a,span,li {
 .button,
 .btn {
   display: flex; 
-  align-items: center; 
-  justify-content: center;;
-  padding: var(--sp-md) var(--sp-xl);
-  margin-top: 15px;
+  margin-top: 15px auto 0;
   background: var(--star-victory-green);
   color: var(--star-white);
   border: none;
