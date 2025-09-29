@@ -223,9 +223,10 @@ p,a,span,li {
 ────────────────────────────────────────────────────────── */
 .button,
 .btn {
-  display: inline-block;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;;
   padding: var(--sp-md) var(--sp-xl);
-  margin: flex-center ;
   margin-top: 15px;
   background: var(--star-victory-green);
   color: var(--star-white);
