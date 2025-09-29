@@ -66,7 +66,7 @@ export default function Login() {
 
           <div
             className="flex-center mb-md"
-            style={{ justifyContent: 'space-between', width: '100%' }}
+            style={{ justifyContent: 'space-between', width: '75%' }}
           >
             <label className="remember">
               <input
