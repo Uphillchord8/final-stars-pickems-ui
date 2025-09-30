@@ -73,7 +73,7 @@ export default function Pickem() {
               </div>
             );
           })}
-          <span className="fw-bold text-lg mx-sm">vs</span>
+
         </div>
 
         <p className="text-center mb-sm">
