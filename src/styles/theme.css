@@ -417,6 +417,13 @@ select {
   flex: 0 0 200px;
 }
 
+.userCell {
+  display: inline-flex;      /* keep avatar and name on one line */
+  align-items: center;       /* vertical alignment */
+  justify-content: center;   /* center horizontally within the cell */
+  gap: 0.6rem;               /* space between avatar and name */
+}
+
 
 
 /* ──────────────────────────────────────────────────────────
