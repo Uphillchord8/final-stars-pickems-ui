@@ -53,9 +53,6 @@ export default function Leaderboard() {
     <div className="container">
       <h1 className="section-title text-center">Leaderboard</h1>
 
-      {!hasAnyPoints && (
-        <p className="text-center mb-md">No completed picks yet. Users are listed with zero points.</p>
-      )}
 
       <div className="podium flex-center mb-lg">
         {podium.map((user, idx) => (
@@ -64,7 +61,7 @@ export default function Leaderboard() {
             <img
               src={getAvatarSrc(user.avatarUrl)}
               alt={`${user.username} avatar`}
-              className="avatar mb-sm"
+              className="leaderboard-pic mb-sm"
             />
             <div className="fw-bold">{user.username}</div>
             <div>Points: {user.total_points ?? 0}</div>

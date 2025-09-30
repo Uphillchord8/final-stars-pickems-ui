@@ -438,6 +438,13 @@ select {
   margin: 0 auto var(--sp-md);
 }
 
+.leaderboard-pic {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto var(--sp-md);
+}
 
 /* ──────────────────────────────────────────────────────────
    15) Stat Row (season-stats)
