@@ -100,7 +100,7 @@ export default function Profile() {
           <img
             src={avatarSrc}
             alt="User avatar"
-            className="avatar"
+            className="profile-pic"
           />
         </div>
 
