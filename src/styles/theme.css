@@ -451,6 +451,7 @@ select {
 .team-pic {
   width: 96px;
   height: 96px;
+  object: contain; 
   object-fit: cover;
   margin: 0 auto var(--sp-md);
 }
