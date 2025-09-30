@@ -64,10 +64,10 @@ export default function Pickem() {
                 {logoUrl
                   ? <img src={logoUrl}
                          alt={`${team} logo`}
-                         className="avatar-sm mb-xs"
+                         className="player-pic"
                          onError={e => e.currentTarget.style.display = 'none'}
                     />
-                  : <div className="avatar-sm mb-xs bg-gray"></div>
+                  : <div className="player-pic"></div>
                 }
                 <span className="text-sm fw-bold">{team}</span>
               </div>
