@@ -452,6 +452,7 @@ select {
   width: 96px;
   height: 96px;
   object: contain; 
+  border-radius: 50%;
   object-fit: cover;
   margin: 0 auto var(--sp-md);
 }
