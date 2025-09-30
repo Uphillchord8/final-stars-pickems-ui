@@ -457,6 +457,14 @@ select {
   margin: 0 auto var(--sp-md);
 }
 
+.profile-pic {
+  width: 292px;
+  height: 292px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto var(--sp-md);
+}
+
 /* ──────────────────────────────────────────────────────────
    15) Stat Row (season-stats)
 ────────────────────────────────────────────────────────── */
