@@ -64,7 +64,7 @@ export default function Pickem() {
                 {logoUrl
                   ? <img src={logoUrl}
                          alt={`${team} logo`}
-                         className="player-pic"
+                         className="team-pic"
                          onError={e => e.currentTarget.style.display = 'none'}
                     />
                   : <div className="player-pic"></div>
