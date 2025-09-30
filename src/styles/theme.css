@@ -449,11 +449,11 @@ select {
 }
 
 .team-pic {
-  max-width: 96px;
-  max-height: 96px;
-  width: auto;
-  height: auto;
+  width: 96px;
+  height: 96px;
+  object: contain; 
   border-radius: 50%;
+  object-fit: cover;
   margin: 0 auto var(--sp-md);
 }
 
