@@ -89,7 +89,7 @@ export default function Leaderboard() {
                     <img
                       src={getAvatarSrc(user.avatarUrl)}
                       alt={`${user.username} avatar`}
-                      className="avatar-sm mr-sm"
+                      className="leaderboard-pic mb-sm
                     />
                     {user.username}
                   </div>
