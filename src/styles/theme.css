@@ -160,7 +160,8 @@ p,a,span,li {
 .table td {
   padding: var(--sp-sm);
   border-bottom: 1px solid rgba(0,0,0,0.1);
-  text-align: left;
+   text-align: center;
+  vertical-align: middle;
 }
 
 .remember {
