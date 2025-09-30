@@ -36,7 +36,28 @@ export default function Leaderboard() {
   }
 
 
+  const podium = leaders.slice(0, 3);
+  const rest   = leaders.slice(3);
+
   return (
+    <div className="container">
+      <h1 className="section-title text-center">Leaderboard</h1>
+
+      <div className="podium flex-center mb-lg">
+        {podium.map((user, idx) => (
+          <div key={user.id} className="card text-center">
+            <div className="fw-bold text-lg mb-sm">#{idx + 1}</div>
+            <img
+              src={avatarSrc}
+              alt={`${user.username} avatar`}
+              className="avatar mb-sm"
+            />
+            <div className="fw-bold">{user.username}</div>
+            <div>Points: {user.total_points}</div>
+            <div>Last Game: {user.last_game_points}</div>
+          </div>
+        ))}
+      </div>
 
       <div className="tableWrapper">
         <table className="table">
