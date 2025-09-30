@@ -35,14 +35,6 @@ export default function Leaderboard() {
     );
   }
 
-  if (!leaders.length) {
-    return (
-      <div className="container">
-        <h1 className="section-title text-center">Leaderboard</h1>
-        <p className="text-center">No picks yet. Be the first to submit!</p>
-      </div>
-    );
-  }
 
   const podium = leaders.slice(0, 3);
   const rest   = leaders.slice(3);
