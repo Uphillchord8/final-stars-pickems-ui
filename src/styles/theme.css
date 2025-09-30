@@ -154,7 +154,7 @@ p,a,span,li {
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.3);
 }
 
 .table th,
