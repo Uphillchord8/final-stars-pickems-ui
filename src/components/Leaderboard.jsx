@@ -61,7 +61,7 @@ export default function Leaderboard() {
             <img
               src={getAvatarSrc(user.avatarUrl)}
               alt={`${user.username} avatar`}
-              className="leaderboard-pic mb-sm"
+              className="podium-pic mb-sm"
             />
             <div className="fw-bold">{user.username}</div>
             <div>Points: {user.total_points ?? 0}</div>

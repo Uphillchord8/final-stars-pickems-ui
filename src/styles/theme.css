@@ -456,6 +456,14 @@ select {
   margin: 0 auto var(--sp-md);
 }
 
+.podium-pic {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto var(--sp-md);
+}
+
 .team-pic {
   width: 96px;
   height: 96px;
