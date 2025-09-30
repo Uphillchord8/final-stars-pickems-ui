@@ -453,7 +453,6 @@ select {
   max-height: 96px;
   width: auto;
   height: auto;
-  object: contain; 
   border-radius: 50%;
   object-fit: cover;
   margin: 0 auto var(--sp-md);
