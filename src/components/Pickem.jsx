@@ -28,8 +28,8 @@ export default function Pickem() {
   const handleSubmit = async gameId => {
     try {
       const pick = selected[gameId] || {};
-      const game = games.find(g => g._id === gameId); // ✅ find the full game object
-      const gamePk = game?.gamePk || null;            // ✅ safely extract gamePk
+      const game = games.find(g => String(g._id) === String(gameId)); // ✅ find the full game object
+      const gamePk = game?.gamePk || null;        		      // ✅ safely extract gamePk
 
       await api.post('/picks', {
         gamePk,
