@@ -85,11 +85,13 @@ export default function Pickem() {
             <div>
               <p>
                 <strong>First Goal:</strong>{' '}
-                {game.players.find(p => p._id === game.firstGoalPlayerId)?.name || '—'}
+                {game.players.find(p => String(p._id) === String(game.firstGoalPlayerId))?.name || '—'}
+
               </p>
               <p>
                 <strong>GWG:</strong>{' '}
-                {game.players.find(p => p._id === game.gwGoalPlayerId)?.name || '—'}
+                {game.players.find(p => String(p._id) === String(game.gwGoalPlayerId))?.name || '—'}
+
               </p>
             </div>
           )
