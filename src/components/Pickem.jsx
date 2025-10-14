@@ -30,6 +30,7 @@ export default function Pickem() {
       const pick = selected[gameId] || {};
       await api.post('/picks', {
         gameId,
+	gamePk,
         firstGoalPlayerId: pick.firstGoal,
         gwGoalPlayerId: pick.gwGoal
       });
