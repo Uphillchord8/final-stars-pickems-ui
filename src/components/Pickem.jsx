@@ -6,7 +6,7 @@ export default function Pickem() {
   const { user } = useAuth();
   const [games, setGames] = useState([]);
   const [picks, setPicks] = useState([]);
-  const [selected, setSelected] = useState({});
+  const [selected, setSelected] = useState({}); 
 
   useEffect(() => {
     api.get('/games')
