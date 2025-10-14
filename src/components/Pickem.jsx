@@ -29,10 +29,7 @@ export default function Pickem() {
     try {
       const pick = selected[gameId] || {};
 
-      if (!gamePk) {
-        alert('GamePk is missing. Cannot submit pick.');
-        return;
-      }
+        }
 
       await api.post('/picks', {
         gamePk,
