@@ -10,7 +10,10 @@ export default function Pickem() {
 
   useEffect(() => {
     api.get('/games')
-      .then(res => setGames(res.data))
+      .then(res => {
+        console.log('Games loaded:', res.data); // ✅ Debug log
+        setGames(res.data);
+      })
       .catch(console.error);
 
     api.get('/picks')
@@ -25,13 +28,21 @@ export default function Pickem() {
     }));
   };
 
-  const handleSubmit = async (gameId, gamePk) => {
+  const handleSubmit = async (gameId) => {
     try {
       const pick = selected[gameId] || {};
+      const game = games.find(g => g._id === gameId);
 
-    
+      if (!game || !game.gamePk) {
+        console.error('Missing gamePk for game:', gameId);
+        alert('Could not submit pick: missing gamePk');
+        return;
+      }
+
+      console.log('Submitting pick for:', gameId, game.gamePk); // ✅ Debug log
+
       await api.post('/picks', {
-        gamePk,
+        gamePk: game.gamePk,
         firstGoalPlayerId: pick.firstGoal,
         gwGoalPlayerId: pick.gwGoal
       });
@@ -146,7 +157,7 @@ export default function Pickem() {
             </div>
             <button
               className="button w-full"
-              onClick={() => handleSubmit(game._id, game.gamePk)} // ✅ pass lowercase gamePk
+              onClick={() => handleSubmit(game._id)} // ✅ Now only passes gameId, gamePk is resolved inside
               disabled={locked}
             >
               Submit Pick
@@ -184,3 +195,4 @@ export default function Pickem() {
     </div>
   );
 }
+``
