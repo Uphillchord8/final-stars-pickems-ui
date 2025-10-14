@@ -6,7 +6,7 @@ export default function Pickem() {
   const { user } = useAuth();
   const [games, setGames] = useState([]);
   const [picks, setPicks] = useState([]);
-  const [selected, setSelected] = useState({}); 
+  const [selected, setSelected] = useState({});
 
   useEffect(() => {
     api.get('/games')
@@ -25,28 +25,26 @@ export default function Pickem() {
     }));
   };
 
-const handleSubmit = async gameId => {
-  try {
-    const pick = selected[gameId] || {};
-    const game = games.find(g => String(g._id) === String(gameId)); // ✅ fix comparison
-    const gamePk = game?.gamePk || null;
+  const handleSubmit = async (gameId, gamePk) => {
+    try {
+      const pick = selected[gameId] || {};
 
-    if (!gamePk) {
-      alert('GamePk is missing. Cannot submit pick.');
-      return;
+      if (!gamePk) {
+        alert('GamePk is missing. Cannot submit pick.');
+        return;
+      }
+
+      await api.post('/picks', {
+        gamePk,
+        firstGoalPlayerId: pick.firstGoal,
+        gwGoalPlayerId: pick.gwGoal
+      });
+
+      alert('Pick submitted!');
+    } catch {
+      alert('Could not submit pick');
     }
-
-    await api.post('/picks', {
-      gamePk,
-      firstGoalPlayerId: pick.firstGoal,
-      gwGoalPlayerId: pick.gwGoal
-    });
-
-    alert('Pick submitted!');
-  } catch {
-    alert('Could not submit pick');
-  }
-};
+  };
 
   const now = new Date();
   const cutoff = new Date('2025-10-09T00:00:00Z');
@@ -55,7 +53,7 @@ const handleSubmit = async gameId => {
   const past = sorted.filter(g => new Date(g.gameTime) < now && new Date(g.gameTime) >= cutoff);
   const nextGame = upcoming.shift();
 
-  const getUserPick = gameId => picks.find(p => p.gameId === gameId);
+  const getUserPick = gameId => picks.find(p => String(p.gameId) === String(gameId));
   const getPoints = (pick, game) => {
     if (!pick || !game) return 0;
     const correctFirst = pick.firstGoalPlayerId === game.firstGoalPlayerId;
@@ -151,7 +149,7 @@ const handleSubmit = async gameId => {
             </div>
             <button
               className="button w-full"
-              onClick={() => handleSubmit(game._id)}
+              onClick={() => handleSubmit(game._id, game.gamePk)} // ✅ pass gamePk directly
               disabled={locked}
             >
               Submit Pick
