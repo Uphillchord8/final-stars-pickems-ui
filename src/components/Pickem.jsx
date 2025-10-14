@@ -41,7 +41,8 @@ export default function Pickem() {
       });
 
       alert('Pick submitted!');
-    } catch {
+    } catch (err) {
+      console.error('Submit error:', err);
       alert('Could not submit pick');
     }
   };
@@ -149,7 +150,7 @@ export default function Pickem() {
             </div>
             <button
               className="button w-full"
-              onClick={() => handleSubmit(game._id, game.gamePk)} // ✅ pass gamePk directly
+              onClick={() => handleSubmit(game._id, game.gamePk)} // ✅ pass lowercase gamePk
               disabled={locked}
             >
               Submit Pick
