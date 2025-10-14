@@ -32,8 +32,7 @@ export default function Pickem() {
       const gamePk = game?.gamePk || null;            // ✅ safely extract gamePk
 
       await api.post('/picks', {
-        gameId,
-	gamePk,
+        gamePk,
         firstGoalPlayerId: pick.firstGoal,
         gwGoalPlayerId: pick.gwGoal
       });
